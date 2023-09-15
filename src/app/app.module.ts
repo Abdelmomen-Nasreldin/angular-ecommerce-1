@@ -4,6 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgIconsModule } from '@ng-icons/core';
+import { bootstrapInstagram, bootstrapFacebook, bootstrapTiktok, bootstrapTwitter, bootstrapLinkedin, bootstrapYoutube } from '@ng-icons/bootstrap-icons';
+
+
 import { HeaderComponent } from './Components/header/header.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { ProductComponent } from './Components/product/product.component';
@@ -32,7 +36,9 @@ import { HomeComponent } from './Components/home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgIconsModule.withIcons({bootstrapInstagram, bootstrapFacebook, bootstrapTiktok, bootstrapTwitter, bootstrapLinkedin, bootstrapYoutube}),
+
   ],
   providers: [],
   bootstrap: [AppComponent]
