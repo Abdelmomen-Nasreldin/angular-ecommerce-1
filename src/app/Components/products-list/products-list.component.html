@@ -1,1 +1,9 @@
-<p>products-list works!</p>
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-5 mx-auto">
+    <div class="flex justify-evenly flex-wrap  m-4 gap-5">
+      <ng-container *ngFor="let product of products">
+        <app-product class="flex-[0_1_300px]" [product]="product"></app-product>
+      </ng-container>
+    </div>
+  </div>
+</section>

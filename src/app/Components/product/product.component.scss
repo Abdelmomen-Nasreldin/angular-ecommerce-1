@@ -1,0 +1,7 @@
+.product {
+  &:hover{
+    .description{
+      transform: translateY(0);
+    }
+  }
+}
