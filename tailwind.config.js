@@ -4,7 +4,13 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      lineClamp:{
+        "1":"1",
+        "2":"2",
+        "3":"3",
+      }
+    },
   },
   plugins: [],
 }
