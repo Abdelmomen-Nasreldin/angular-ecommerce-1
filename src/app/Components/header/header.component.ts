@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/Services/auth/auth.service';
 interface pages {
   title: string;
   path: string
@@ -9,6 +10,7 @@ interface pages {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  isLoggedIn = false;
   menuHandler: boolean = true;
   mdOptions: boolean = true;
   search: boolean = true;
@@ -19,6 +21,10 @@ export class HeaderComponent implements OnInit {
     {title: 'categories', path: '/categories'},
     {title: 'brands', path: '/brands'},
   ]
+
+  constructor(private _AuthService: AuthService) {
+
+  }
   menuHandlerBtn() {
       this.menuHandler = !this.menuHandler;
   }
@@ -28,6 +34,15 @@ export class HeaderComponent implements OnInit {
   searchToggle() {
       this.search = !this.search;
   }
-  ngOnInit(): void {}
+  logout(){
+    this._AuthService.logout()
+  }
+  ngOnInit(): void {
+    this._AuthService.isLoggedIn.subscribe({
+      next: (value) => {
+        this.isLoggedIn = value
+      },
+    })
+  }
 
 }
