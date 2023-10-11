@@ -1,0 +1,144 @@
+<section class="relative ">
+  <div class="container mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
+    <div class="mx-auto max-w-lg text-center">
+      <h1 class="text-2xl font-bold sm:text-3xl">Sign Up</h1>
+
+      <p class="mt-4 text-gray-500">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla
+        eaque error neque ipsa culpa autem, at itaque nostrum!
+      </p>
+    </div>
+
+    <h2 *ngIf="apiErrorMsg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3">
+      {{apiErrorMsg}}</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm)" class="mx-auto mb-0 mt-8 max-w-md space-y-4">
+      <!--  name -->
+      <div>
+        <label for="name" class="">name</label>
+
+        <div class="relative">
+          <input type="text" class="w-full rounded-lg border-gray-200 bg-[#f8f9fa] p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter name" [formControlName]="formType.name" />
+
+        </div>
+         <!-- error -->
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.name)?.errors && fromControl(formType.name)?.touched ">
+          <strong *ngIf="fromControl(formType.name)?.getError('required')"
+            class="font-bold text-red-700">Required</strong>
+          <span *ngIf="fromControl(formType.name)?.getError('name')" class="block sm:inline">Not a valid name</span>
+        </div>
+      </div>
+      <!--  Email -->
+      <div>
+        <label for="email" class="">Email</label>
+
+        <div class="relative">
+          <input type="email" class="w-full rounded-lg border-gray-200 bg-[#f8f9fa] p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter email" [formControlName]="formType.email" />
+
+          <span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+            </svg>
+          </span>
+        </div>
+         <!-- error -->
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.email)?.errors && fromControl(formType.email)?.touched ">
+          <strong *ngIf="fromControl(formType.email)?.getError('required')"
+            class="font-bold text-red-700">Required</strong>
+          <span *ngIf="fromControl(formType.email)?.getError('email')" class="block sm:inline">Not a valid email</span>
+        </div>
+      </div>
+      <!--  password -->
+      <div>
+        <label for="password" class="">Password</label>
+
+        <div class="relative">
+          <input type="password" class="w-full rounded-lg bg-[#f8f9fa] border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter password" [formControlName]="formType.password" />
+
+          <span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </span>
+        </div>
+        <!-- error password -->
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.password)?.errors && fromControl(formType.password)?.touched ">
+          <strong *ngIf="fromControl(formType.password)?.getError('required')"
+            class="font-bold text-red-700">Required</strong>
+          <span *ngIf="fromControl(formType.password)?.getError('minlength')" class="block sm:inline">Not a valid password</span>
+        </div>
+      </div>
+      <!--  rePassword -->
+      <div>
+        <label for="rePassword" class="">rePassword</label>
+
+        <div class="relative">
+          <input type="password" class="w-full rounded-lg bg-[#f8f9fa] border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter rePassword" [formControlName]="formType.rePassword" />
+
+          <span class="absolute inset-y-0 end-0 grid place-content-center px-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </span>
+        </div>
+        <!-- error rePassword -->
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.rePassword)?.errors && fromControl(formType.rePassword)?.touched ">
+          <strong *ngIf="fromControl(formType.rePassword)?.getError('required')"
+            class="font-bold text-red-700">Required</strong>
+          <span *ngIf="fromControl(formType.rePassword)?.getError('minlength')" class="block sm:inline">Not a valid rePassword</span>
+        </div>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.rePassword)?.touched && fromControl(formType.rePassword)?.value !== fromControl(formType.password)?.value ">
+          <span class="text-red-700" class="block sm:inline">Not matched Passwords</span>
+        </div>
+      </div>
+      <!--  phone -->
+      <div>
+        <label for="phone" class="">phone</label>
+
+        <div class="relative">
+          <input type="tel" class="w-full rounded-lg bg-[#f8f9fa] border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter phone" [formControlName]="formType.phone" />
+        </div>
+        <!-- error phone -->
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
+        *ngIf="fromControl(formType.phone)?.errors && fromControl(formType.phone)?.touched ">
+          <strong *ngIf="fromControl(formType.phone)?.getError('required')"
+            class="font-bold text-red-700">Required</strong>
+          <span *ngIf="fromControl(formType.phone)?.getError('minlength')" class="block sm:inline">Not a valid phone</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center">
+
+
+        <button type="submit"
+          class="inline-block w-full rounded-lg bg-[#08ac0a] px-5 py-3 text-sm font-medium text-white">
+          <span *ngIf="!isLoading">Sign Up</span>
+          <span *ngIf="isLoading">loading...</span>
+        </button>
+     
+      </div>
+    </form>
+  </div>
+
+
+</section>

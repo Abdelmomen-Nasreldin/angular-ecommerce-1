@@ -10,7 +10,7 @@ interface pages {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  isLoggedIn = false;
+  isAuthenticated: boolean =false
   menuHandler: boolean = true;
   mdOptions: boolean = true;
   search: boolean = true;
@@ -22,8 +22,10 @@ export class HeaderComponent implements OnInit {
     {title: 'brands', path: '/brands'},
   ]
 
-  constructor(private _AuthService: AuthService) {
-
+  constructor(private _authService: AuthService) {
+    this._authService.isAuthenticated.subscribe(isAuth =>{
+      this.isAuthenticated = isAuth
+    })
   }
   menuHandlerBtn() {
       this.menuHandler = !this.menuHandler;
@@ -34,15 +36,9 @@ export class HeaderComponent implements OnInit {
   searchToggle() {
       this.search = !this.search;
   }
+ 
+  ngOnInit(): void {}
   logout(){
-    this._AuthService.logout()
+    this._authService.logout()
   }
-  ngOnInit(): void {
-    this._AuthService.isLoggedIn.subscribe({
-      next: (value) => {
-        this.isLoggedIn = value
-      },
-    })
-  }
-
 }

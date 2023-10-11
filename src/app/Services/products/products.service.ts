@@ -1,14 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Observable, map } from 'rxjs';
+import { Product } from 'src/app/Models/product';
+const BASE_URL = 'https://ecommerce.routemisr.com'
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
 
   constructor(private httpClient : HttpClient) { }
-getProducts() :Observable<any>{
-  return this.httpClient.get<any>('https://ecommerce.routemisr.com/api/v1/products');
+getAllProducts() :Observable<Product[]>{
+  return this.httpClient.get<any>(BASE_URL + '/api/v1/products').pipe(
+    map(res => res.data)
+  );
 }
+
+getSpecificProduct(id: string) :Observable<Product>{
+  return this.httpClient.get<any>(BASE_URL + '/api/v1/products/'+ id).pipe(
+    map(res => res.data)
+  );
+}
+
 }

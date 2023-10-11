@@ -1,50 +1,36 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, tap } from 'rxjs';
+import { Login } from 'src/app/Models/login';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import jwtDecode from 'jwt-decode';
-import { BehaviorSubject } from 'rxjs';
-import { Login } from 'src/app/interfaces/login';
-import { Register } from 'src/app/interfaces/register';
+import { Register } from 'src/app/Models/register';
+
+const baseURL = "https://ecommerce.routemisr.com";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient, private router: Router) {}
-  isLoggedIn = new BehaviorSubject<boolean>(false);
-  userData = null;
+  isAuthenticated = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
+  static isAuthenticated: any;
+  constructor(private _httpClient: HttpClient, private _router: Router) { };
 
-  tokenDecode(token: string) {
-    // let encodedToken = JSON.stringify(localStorage.getItem('userToken'));
-    let decodedToken:any = jwtDecode(token);
-    if (decodedToken) {
-      this.userData = decodedToken;
-      this.isLoggedIn.next(true)
-      console.log(this.userData);
-    }
+  login(data: Login) {
+    return this._httpClient.post(baseURL + '/api/v1/auth/signin', data).pipe(
+      tap((res: any) => {
+        localStorage.setItem('token', res.token)
+        this.isAuthenticated.next(true);
+      })
+    );
   }
-  saveToken(token: string) {
-    localStorage.setItem('userToken', token);
-    this.tokenDecode(token);
+
+  logout() {
+    localStorage.removeItem('token')
+    this.isAuthenticated.next(false);
+    this._router.navigate(['/'])
   }
 
   register(data: Register | null) {
-    return this.httpClient.post(
-      'https://ecommerce.routemisr.com/api/v1/auth/signup',
-      data
-    );
-  }
-  login(data: Login) {
-    return this.httpClient.post(
-      'https://ecommerce.routemisr.com/api/v1/auth/signin',
-      data
-    );
-  }
-
-  logout(){
-    this.isLoggedIn.next(false);
-    localStorage.removeItem("userToken");
-    this.userData = null;
-    this.router.navigate(['/'])
+    return this._httpClient.post(baseURL + '/api/v1/auth/signup', data)
   }
 }
