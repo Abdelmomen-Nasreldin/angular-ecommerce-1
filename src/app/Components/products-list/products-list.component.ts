@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from 'src/app/Services/products.service';
-import { Product } from 'src/app/interfaces/product';
+import { ProductsService } from 'src/app/Services/products/products.service';
+import { Product } from 'src/app/Models/product';
+
 
 @Component({
   selector: 'app-products-list',
@@ -9,12 +10,13 @@ import { Product } from 'src/app/interfaces/product';
 })
 export class ProductsListComponent implements OnInit {
   constructor(private _products: ProductsService) {}
+  isLoading = false;
   products! : Product[]
   ngOnInit() {
-    this._products.getProducts().subscribe((res: any) => {
-      console.log('====================================');
-      console.log(res.data);
-      this.products = res.data
+    this.isLoading = true
+    this._products.getAllProducts().subscribe((data: Product[]) => {
+      this.products = data
+      this.isLoading = false
     });
   }
 }

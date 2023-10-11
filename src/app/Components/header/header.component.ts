@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/Services/auth/auth.service';
+import { CartService } from 'src/app/Services/cart/cart.service';
 interface pages {
   title: string;
   path: string
@@ -9,6 +11,7 @@ interface pages {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  isAuthenticated: boolean =false
   menuHandler: boolean = true;
   mdOptions: boolean = true;
   search: boolean = true;
@@ -19,6 +22,22 @@ export class HeaderComponent implements OnInit {
     {title: 'categories', path: '/categories'},
     {title: 'brands', path: '/brands'},
   ]
+  cartProductsLength = 0;
+  constructor(private _authService: AuthService, private _cartService : CartService) {
+    this._authService.isAuthenticated.subscribe(isAuth =>{
+      this.isAuthenticated = isAuth
+    })
+    this._cartService.getCartProducts().subscribe({
+      next: (res)=>{
+        this.cartProductsLength = res.length
+        console.log(this.cartProductsLength);
+      },
+      error: (err)=>{
+        console.log(err);
+
+      }
+    })
+  }
   menuHandlerBtn() {
       this.menuHandler = !this.menuHandler;
   }
@@ -28,6 +47,11 @@ export class HeaderComponent implements OnInit {
   searchToggle() {
       this.search = !this.search;
   }
-  ngOnInit(): void {}
 
+  ngOnInit(): void {
+
+  }
+  logout(){
+    this._authService.logout()
+  }
 }
