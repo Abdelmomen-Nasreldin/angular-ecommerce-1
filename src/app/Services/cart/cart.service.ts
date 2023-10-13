@@ -52,10 +52,10 @@ emptyCart(){
     );
   }
 
-  getLoggedUserCart(): Observable<Product[]> {
+  getLoggedUserCart(): Observable<CartProduct[]> {
     return this.httpClient.get<any>(environment.BASE_URL + '/api/v1/cart').pipe(
       map((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         // console.log(res.data.products.map((prod: any)=>{
         //   return {count: prod.count,product: prod.product}
         // }));
@@ -63,8 +63,13 @@ emptyCart(){
           return { count: prod.count, product: prod.product };
         });
         this.cartProducts.next(newCartProduct);
-        return res.data.products;
+        return res.data;
       })
     );
   }
+
+
+RemoveSpecificCartItem(productId: string){
+  return this.httpClient.delete<any>(environment.BASE_URL + '/api/v1/cart/' + productId)
+}
 }

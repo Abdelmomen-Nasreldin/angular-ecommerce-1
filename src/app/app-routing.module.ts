@@ -18,14 +18,14 @@ const routes: Routes = [
   {path: '', component:MainLayoutComponent, children: [
     {path: '', component:HomeComponent},
     {path: 'home', redirectTo: ''},
-    {path: 'cart', component: CartComponent},
-    {path: 'products', component: ProductsComponent,canActivate: [authGuard()]},
+    {path: 'cart', component: CartComponent,canActivate: [authGuard()]},
+    {path: 'products', component: ProductsComponent},
     {path: 'categories', component: CategoriesComponent},
     {path: 'brands', component: BrandsComponent},
     {path: 'productDetails/:id', component: ProductDetailsComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
-    {path: 'wishList', component: WishListComponent},
+    {path: 'wishList', component: WishListComponent,canActivate: [authGuard()]},
     {path: '**', component: NotFoundComponent},
   ]},
 ];
