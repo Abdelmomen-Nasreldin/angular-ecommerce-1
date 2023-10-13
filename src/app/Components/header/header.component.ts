@@ -26,17 +26,9 @@ export class HeaderComponent implements OnInit {
   constructor(private _authService: AuthService, private _cartService : CartService) {
     this._authService.isAuthenticated.subscribe(isAuth =>{
       this.isAuthenticated = isAuth
-    })
-    this._cartService.getCartProducts().subscribe({
-      next: (res)=>{
-        this.cartProductsLength = res.length
-        console.log(this.cartProductsLength);
-      },
-      error: (err)=>{
-        console.log(err);
 
-      }
     })
+
   }
   menuHandlerBtn() {
       this.menuHandler = !this.menuHandler;
@@ -49,9 +41,32 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.isAuthenticated) {
+      this._cartService.getCartProducts().subscribe({
+        next: (res)=>{
+          this.cartProductsLength = res.length
+          console.log(this.cartProductsLength);
+        },
+        error: (err)=>{
+          console.log(err);
 
+        }
+      })
+    } else {
+      this._cartService.getCartProducts().subscribe({
+        next: (res)=>{
+          this.cartProductsLength = res.length
+          console.log(this.cartProductsLength);
+        },
+        error: (err)=>{
+          console.log(err);
+
+        }
+      })
+    }
   }
   logout(){
     this._authService.logout()
+    this._cartService.emptyCart()
   }
 }

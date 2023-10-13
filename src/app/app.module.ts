@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpInterceptor } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,6 +28,7 @@ import { CategoriesComponent } from './Pages/categories/categories.component';
 import { BrandsComponent } from './Pages/brands/brands.component';
 import { ProductsComponent } from './Pages/products/products.component';
 import { WishListComponent } from './Pages/wishList/wishList.component';
+import { AuthInterceptorService } from './Services/auth-interceptor/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,7 @@ import { WishListComponent } from './Pages/wishList/wishList.component';
     NgIconsModule.withIcons({bootstrapInstagram, bootstrapFacebook, bootstrapTiktok, bootstrapTwitter, bootstrapLinkedin, bootstrapYoutube, bootstrapStarFill}),
 
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

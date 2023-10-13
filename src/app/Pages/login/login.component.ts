@@ -1,9 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { ILoginType } from 'src/app/Models/i-login-type';
+import { Product } from 'src/app/Models/product';
 import { AuthService } from 'src/app/Services/auth/auth.service';
+import { CartService } from 'src/app/Services/cart/cart.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,7 @@ export class LoginComponent implements OnDestroy {
     email: "email",
     password: "password"
   }
-  constructor(private _authService: AuthService, private _router: Router, private fb: FormBuilder) {
+  constructor(private _authService: AuthService, private _cartService : CartService, private _router: Router, private fb: FormBuilder) {
 
 
     this.loginForm = new FormGroup({
@@ -48,6 +50,11 @@ export class LoginComponent implements OnDestroy {
     this.authSubscription = this._authService.login(form.value).subscribe({
       next: (res: any) => {
         this.isLoading = false;
+        this._cartService.getLoggedUserCart().pipe(
+          map((products: any) => {
+            return products.map((product: any) => product.product)
+          })
+        ).subscribe()
         this._router.navigate(['/'])
       }, error: (err) => {
         this.apiErrorMsg = err.error.message;

@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/Models/product';
@@ -34,8 +35,9 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  addToCart(productId: string) {
-      this._cartService.setCartProducts(productId);
+  addToCart(product: Product) {
+    this._cartService.setCartProducts(product)
+    this._cartService.addProductToCart(product.id).subscribe((res: any)=>console.log(res))  
   }
 }
 
