@@ -47,6 +47,10 @@ export class RegisterComponent implements OnDestroy {
       ]),
       [this.formType.phone]: new FormControl('', [Validators.required, Validators.minLength(11)]),
     });
+    let isAuthenticated = this._authService.isAuthenticated.getValue()
+    if (isAuthenticated) {
+      this._router.navigate(['/'])
+    }
   }
 
   fromControl(type: string) {

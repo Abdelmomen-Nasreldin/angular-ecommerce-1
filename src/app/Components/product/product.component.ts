@@ -15,8 +15,9 @@ export class ProductComponent {
     this._router.navigate(['/productDetails/', productId]);
   }
 
-  addToCart(productId: string) {
-    this._cartService.setCartProducts(productId);
+  addToCart(product: Product) {
+    this._cartService.setCartProducts(product)
+    this._cartService.addProductToCart(product.id).subscribe((res: any)=>console.log(res))  
   }
 }
 

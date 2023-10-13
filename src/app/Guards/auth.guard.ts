@@ -12,6 +12,8 @@ export function authGuard(): CanActivateFn {
 
     // Check if the user is authenticated
     if (authService.isAuthenticated.getValue()) {
+      console.log("guard");
+      
       return true; // Allow access to the route
     } else {
       // Redirect the user to the login page or another appropriate route

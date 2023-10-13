@@ -1,25 +1,30 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, tap, Observable } from 'rxjs';
 import { Login } from 'src/app/Models/login';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Register } from 'src/app/Models/register';
+import { CartService } from '../cart/cart.service';
 
 const baseURL = "https://ecommerce.routemisr.com";
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   isAuthenticated = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
-  static isAuthenticated: any;
+  // token = new BehaviorSubject<string>(JSON.stringify(localStorage.getItem('token')));
+  // token : string | null= localStorage.getItem('token') || null
+
+  // static isAuthenticated: any;
   constructor(private _httpClient: HttpClient, private _router: Router) { };
 
   login(data: Login) {
     return this._httpClient.post(baseURL + '/api/v1/auth/signin', data).pipe(
       tap((res: any) => {
-        localStorage.setItem('token', res.token)
+        localStorage.setItem('token', JSON.stringify(res.token)) // it's a string in all cases
+        // this.token = res.token;
         this.isAuthenticated.next(true);
+        // this._cartService.getLoggedUserCart()
       })
     );
   }
@@ -27,6 +32,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token')
     this.isAuthenticated.next(false);
+    // this._cartService.cartProducts.next([])
     this._router.navigate(['/'])
   }
 
