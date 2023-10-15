@@ -4,7 +4,6 @@ import { Observable, map, BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Product } from 'src/app/Models/product';
 import { CartProduct } from 'src/app/Models/cart-product';
-import { ToastrService } from 'ngx-toastr';
 import { ToastersService } from '../toasters/toasters.service';
 
 @Injectable({
