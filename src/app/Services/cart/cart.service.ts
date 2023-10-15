@@ -43,13 +43,7 @@ export class CartService {
     localStorage.setItem('cartProducts', JSON.stringify(currentProducts));
     this._toastersService.showSuccess()
   return this.cartProducts.asObservable()
-  // .subscribe({
-  //   next: (res)=>{
-  //     // this._toastersService.showSuccess()
-  //   }, error: (err)=> {
-  //     // this._toastersService.showFailure()
-  //   }
-  // })
+
   }
   emptyCart() {
     this.cartProducts.next([]);
