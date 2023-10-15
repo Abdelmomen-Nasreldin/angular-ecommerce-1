@@ -60,7 +60,6 @@ export class HeaderComponent implements OnInit {
         },
         error: (err)=>{
           console.log(err);
-
         }
       })
     }

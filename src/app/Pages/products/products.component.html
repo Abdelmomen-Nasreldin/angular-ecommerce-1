@@ -1,1 +1,17 @@
-<p>products works!</p>
+<app-loading *ngIf="isLoading"></app-loading>
+<section *ngIf="!isLoading" class="text-gray-600 body-font p-2">
+    <p class="text-lg">Search products by title:</p>
+    <input type="text" name="search" [(ngModel)]="searchText"
+        class="border-2 w-full  m-5 mx-auto block p-5 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+        placeholder="Search" />
+    <div class="container px-5 py-5 mx-auto">
+        <div class="flex justify-evenly flex-wrap  m-4 gap-5">
+            <ng-container *ngIf="(products | search: searchText).length > 0; else noProducts">
+                <app-product class="flex-[0_1_300px]" *ngFor="let product of products | search : searchText" [product]="product"></app-product>
+            </ng-container>
+            <ng-template #noProducts>
+                <p>no product available</p>
+            </ng-template>
+        </div>
+    </div>
+</section>

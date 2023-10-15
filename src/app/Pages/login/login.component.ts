@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription, map } from 'rxjs';
 import { ILoginType } from 'src/app/Models/i-login-type';
-import { Product } from 'src/app/Models/product';
 import { AuthService } from 'src/app/Services/auth/auth.service';
 import { CartService } from 'src/app/Services/cart/cart.service';
 
@@ -50,11 +49,6 @@ export class LoginComponent implements OnDestroy {
     this.authSubscription = this._authService.login(form.value).subscribe({
       next: (res: any) => {
         this.isLoading = false;
-        this._cartService.getLoggedUserCart().pipe(
-          map((products: any) => {
-            return products.map((product: any) => product.product)
-          })
-        ).subscribe()
         this._router.navigate(['/'])
       }, error: (err) => {
         this.apiErrorMsg = err.error.message;

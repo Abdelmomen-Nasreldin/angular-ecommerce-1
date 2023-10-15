@@ -69,11 +69,13 @@
       <div class="flex items-center justify-center">
 
 
-        <button type="submit"
+        <button type="submit" *ngIf="!isLoading"
           class="inline-block w-full rounded-lg bg-[#08ac0a] px-5 py-3 text-sm font-medium text-white">
-          <span *ngIf="!isLoading">Signin</span>
-          <span *ngIf="isLoading">loading...</span>
+          <span >Signin</span>
         </button>
+        
+          <app-loading *ngIf="isLoading"></app-loading>
+        
       </div>
     </form>
   </div>

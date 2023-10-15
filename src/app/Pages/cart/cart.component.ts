@@ -1,11 +1,7 @@
-import { Subscription, map } from 'rxjs';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from 'src/app/Models/product';
 import { CartService } from 'src/app/Services/cart/cart.service';
-import { ProductsService } from 'src/app/Services/products/products.service';
 import { AuthService } from 'src/app/Services/auth/auth.service';
-import { CartProduct } from 'src/app/Models/cart-product';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
