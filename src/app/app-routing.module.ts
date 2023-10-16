@@ -20,12 +20,6 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'home', redirectTo: '' },
-      {
-        path: 'cart',
-        canActivate: [authGuard()],
-        loadChildren: () =>
-          import('./Pages/cart/cart.module').then((m) => m.CartModule),
-      },
       { path: 'products', component: ProductsComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'brands', component: BrandsComponent },
@@ -36,6 +30,18 @@ const routes: Routes = [
         path: 'wishList',
         component: WishListComponent,
         canActivate: [authGuard()],
+      },
+      {
+        path: 'cart',
+        canActivate: [authGuard()],
+        loadComponent: () =>
+          import('./Pages/cart/cart.component').then((m) => m.CartComponent),
+      },
+      {
+        path: 'allorders',
+        canActivate: [authGuard()],
+        loadComponent: () =>
+          import('./Pages/allorders/allorders.component').then((m) => m.AllordersComponent),
       },
       { path: '**', component: NotFoundComponent },
     ],

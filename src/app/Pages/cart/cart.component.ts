@@ -1,8 +1,13 @@
+import { SharedModule } from './../../shared/shared.module';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CartService } from 'src/app/Services/cart/cart.service';
 import { AuthService } from 'src/app/Services/auth/auth.service';
+import { OrdersService } from 'src/app/Services/orders/orders.service';
+import { CommonModule } from '@angular/common';
 @Component({
+  standalone: true,
+  imports: [CommonModule, RouterModule, SharedModule],
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
@@ -15,10 +20,12 @@ export class CartComponent {
   apiErrorMsg = '';
   isAuthenticated = false;
   totalPrice = 0;
+  cartId!: string
   constructor(
-    private _activatedRoute: ActivatedRoute,
+    private _ordersService: OrdersService,
     private _authService: AuthService,
-    private _cartService: CartService
+    private _cartService: CartService,
+    private _router: Router
   ) {
     this._authService.isAuthenticated.subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
@@ -40,11 +47,17 @@ export class CartComponent {
             this.products = res.products;
             this.totalPrice = res.totalCartPrice;
             console.log(res);
-
+            this.cartId = res._id
             this.isLoading = false;
+
           },
           error: (err) => {
-            this.apiErrorMsg = err.error.errors.msg;
+            console.log(err);
+            if (err.status == 404) {
+              this.apiErrorMsg = "Cart is Empty"
+            } else {
+              this.apiErrorMsg = err.error.errors.msg;
+            }
             this.isLoading = false;
           },
         });
@@ -58,9 +71,24 @@ export class CartComponent {
 
   onRemove(productId: string) {
     this._cartService.RemoveSpecificCartItem(productId).subscribe((res) => {
-      console.log(res);
       this.products = res.data.products;
       this.totalPrice = res.data.totalCartPrice;
+      console.log(res, this.products);
     });
   }
+  checkout() {
+    if (!this.isAuthenticated) {
+      this._router.navigate(['/'])
+      return
+    }
+    this._ordersService.setCheckoutSession(this.cartId).subscribe({
+      next: (res: any) => {
+        console.log(res)
+        const location = res.session.url;
+        window.location.assign(location)
+      },
+      error: (err) => console.log(err)
+    })
+  }
+  
 }

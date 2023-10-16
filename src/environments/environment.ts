@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  BASE_URL : 'https://ecommerce.routemisr.com'
+  BASE_URL : 'https://ecommerce.routemisr.com',
+  APP_HOST : 'http://localhost:4200'
+
 };
 
 /*

@@ -12,19 +12,21 @@ import { ToastersService } from 'src/app/Services/toasters/toasters.service';
 })
 export class ProductComponent implements OnDestroy {
   @Input() product!: Product;
-  constructor(private _router: Router, private _cartService: CartService, private _toastersService: ToastersService) { }
+  constructor(private _router: Router, private _cartService: CartService) { }
   sub!: Subscription
- 
+
   goToDetails(productId: string) {
+    console.log(' before navigation');
     this._router.navigate(['/productDetails/', productId]);
+    console.log('navigated');
   }
 
   addToCart(product: Product) {
     this.sub = this._cartService.setCartProducts(product).subscribe()
   }
   ngOnDestroy(): void {
-    if (this.sub) { 
+    if (this.sub) {
       this.sub.unsubscribe()
     }
-    }
+  }
 }

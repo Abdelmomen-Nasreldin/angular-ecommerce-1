@@ -37,7 +37,6 @@ export class ProductDetailsComponent implements OnInit {
 
   addToCart(product: Product) {
     this._cartService.setCartProducts(product)
-    // this._cartService.addProductToCart(product.id).subscribe((res: any)=>console.log(res))  
   }
 }
 

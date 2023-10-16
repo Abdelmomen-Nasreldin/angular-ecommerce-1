@@ -1,0 +1,39 @@
+<app-loading *ngIf="isLoading"></app-loading>
+<h2  *ngIf="!isLoading && apiErrorMsg" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3">{{apiErrorMsg}}</h2>
+
+<div *ngIf="!isLoading"  class="w-full h-full">
+    <div class="w-full absolute z-10 right-0 h-full overflow-x-hidden transform translate-x-0 transition ease-in-out duration-700" id="checkout">
+        <div class="flex items-end lg:flex-row flex-col justify-end" id="cart">
+            <div class="lg:w-1/2 md:w-8/12 w-full lg:px-8 lg:py-14 md:px-6 px-4 md:py-8 py-4 bg-white overflow-y-auto overflow-x-hidden lg:h-screen h-auto" id="scroll">
+            
+                <h2 *ngIf="!isLoading && !!!products.length"  class="bg-red-100 border text-red-700 px-4 py-3 rounded relative mt-3"> No orders</h2>
+              <ng-container *ngFor="let product of products">
+              <div class="md:flex items-strech py-8 md:py-10 lg:py-8 border-t border-gray-50">
+                  <div class="md:w-4/12 2xl:w-1/4 w-full">
+                      <img [src]="product.product.imageCover" alt="Black Leather Bag" class=" w-full h-full object-center object-cover" />
+                  </div>
+                  <div class="md:pl-3 md:w-8/12 2xl:w-3/4 flex flex-col justify-center">
+                      <p class="text-xs leading-3 text-gray-800 md:pt-0 pt-4">RF293</p>
+                      <div class="flex items-center justify-between w-full pt-1">
+                          <p class="text-base font-black leading-none text-gray-800">{{product.product.title}}</p>
+                         
+                          <p>count : {{product.count}}</p>
+                      </div>
+                      <p class="w-96 text-xs leading-3 text-gray-600">{{product.product.category.name}}</p>
+                      <div class="flex items-center justify-between pt-5">
+                          <div class="flex itemms-center">
+                              <p class="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer" (click)="onRemove(product.product.id)">Remove</p>
+                          </div>
+                          <p class="text-base font-black leading-none text-gray-800">{{product.price | currency}}</p>
+                      </div>
+                  </div>
+              </div>
+
+              </ng-container>
+
+          </div>
+        
+      </div>
+  </div>
+
+</div>
