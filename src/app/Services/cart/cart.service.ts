@@ -3,56 +3,130 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Product } from 'src/app/Models/product';
-import { CartProduct } from 'src/app/Models/cart-product';
+import { Cart, CartProduct } from 'src/app/Models/cart-product';
 import { ToastersService } from '../toasters/toasters.service';
-
+const CART_STORAGE_NAME = 'cartProducts'
 @Injectable({
   providedIn: 'root',
 })
 export class CartService { // Make another APICartService To handle the cart APIs
-  cartProducts = new BehaviorSubject<CartProduct[]>(
-    JSON.parse(<string>localStorage.getItem('cartProducts')) || []
+  cartProducts = new BehaviorSubject<Cart>(
+    JSON.parse(<string>localStorage.getItem(CART_STORAGE_NAME)) || {
+      _id: '',
+      products: [],
+      totalCartPrice: 0
+    }
   );
   constructor(private httpClient: HttpClient, private _toastersService: ToastersService) { }
 
-  getCartProducts(): Observable<CartProduct[]> { // add total price to the cartProducts => convert the interface into class and add totalPrice method
+  getCartProducts(): Observable<Cart> {
+    const NotLoginCart = this.cartProducts.getValue()
+    let totalCartPrice = 0;
+    NotLoginCart.products?.forEach(prod => {
+      let allProductprice = prod.count * prod.price;
+      totalCartPrice += allProductprice;
+    })
+    this.cartProducts.next({ ...NotLoginCart, totalCartPrice })
+    console.log("before api", this.cartProducts.getValue());
+
+    this.getLoggedUserCart().subscribe({
+      next: (res: Cart) => {
+        this.cartProducts.next({
+          _id: res._id,
+          products: [...res.products, ...this.cartProducts.getValue().products],
+          totalCartPrice: res.totalCartPrice + this.cartProducts.getValue().totalCartPrice,
+          createdAt: res.createdAt,
+          cartOwner: res.cartOwner,
+          updatedAt: res.updatedAt,
+        })
+        NotLoginCart.products.forEach(product=>{
+          this.addProductToCart(product._id).subscribe()
+        })
+        console.log("in api", this.cartProducts.getValue());
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+
     return this.cartProducts.asObservable(); // add to the interface or class ohter properties in the API response
   }
 
-  setCartProducts(product: Product): Observable<CartProduct[]> {
-    const currentProducts = this.cartProducts.getValue();
-    const newProducts = this.cartProducts.getValue();
+  setCartProducts(product: Product): Observable<Cart> {
+    const oldCart = this.cartProducts.getValue()
+    const currentCart = { ...oldCart }
 
-    const prod = currentProducts.find((prod) => prod.product.id === product.id);
+    const prod = currentCart.products.find((prod) => prod._id === product._id);
     if (prod) {
       prod.count += 1;
+      currentCart.totalCartPrice += prod.price
     } else {
-      newProducts.push({ product, count: 1 });
+      currentCart.products.push({ product, count: 1, _id: product._id, price: product.price });
+      currentCart.totalCartPrice += product.price
     }
 
-    console.log(newProducts);
-    this.cartProducts.next(newProducts);
-    localStorage.setItem('cartProducts', JSON.stringify(newProducts));
-    this._toastersService.showSuccess()
+    console.log(currentCart);
+    this.cartProducts.next(currentCart);
+    localStorage.setItem(CART_STORAGE_NAME, JSON.stringify(currentCart));
+    this._toastersService.showSuccess("added")
 
     this.addProductToCart(product.id)
       .subscribe({
-        next: (res) => {},
+        next: (res) => {
+          console.log("added to database", res);
+        },
         error: (err) => {
-          console.log(err.status);
           if (err.status !== 401) {
-             this._toastersService.showFailure()
-             this.cartProducts.next(currentProducts)
+            this._toastersService.showFailure()
+            this.cartProducts.next(oldCart)
           }
         }
       })
-   
+
+    return this.cartProducts.asObservable()
+  }
+
+  RemoveCartProduct(productId: string) {
+    let oldCart = this.cartProducts.getValue();
+    const newProducts = oldCart.products.filter(prod => prod._id != productId)
+    let totalCartPrice = 0;
+    newProducts.forEach(prod => {
+      let allProductprice = prod.count * prod.price;
+      totalCartPrice += allProductprice;
+    })
+    console.log(newProducts);
+    
+    this.cartProducts.next({
+      ...oldCart, products: [...newProducts], totalCartPrice
+    });
+    console.log(this.cartProducts.getValue());
+    
+    this._toastersService.showSuccess("removed")
+
+    this.RemoveSpecificCartItem(productId).subscribe({
+      next: (res) => {
+        console.log(res);
+      }, error: (err) => {
+        if (err.status !== 401) {
+          this._toastersService.showFailure()
+          this.cartProducts.next(oldCart)
+        }
+      }
+    })
+    localStorage.setItem(CART_STORAGE_NAME, JSON.stringify(this.cartProducts.getValue()));
     return this.cartProducts.asObservable()
   }
 
   emptyCart() {
-    this.cartProducts.next([]);
-    localStorage.removeItem('cartProducts');
+    this.cartProducts.next({
+      _id: '',
+      products: [],
+      totalCartPrice: 0,
+      createdAt: '',
+      cartOwner: '',
+      updatedAt: '',
+    });
+    localStorage.removeItem(CART_STORAGE_NAME);
   }
 
   addProductToCart(productId: string): Observable<any> {
@@ -62,24 +136,12 @@ export class CartService { // Make another APICartService To handle the cart API
     return this.httpClient.post<any>(
       environment.BASE_URL + '/api/v1/cart',
       body
-    ).pipe(
-      tap(res => console.log(res))
     )
   }
 
-  getLoggedUserCart(): Observable<CartProduct[]> {
+  getLoggedUserCart(): Observable<Cart> {
     return this.httpClient.get<any>(environment.BASE_URL + '/api/v1/cart').pipe(
-      tap((res) => {
-        console.log(res.data);
-
-        let newCartProducts = res.data.products.map((prod: any) => {
-          return { count: prod.count, product: prod.product };
-        }
-        );
-        this.cartProducts.next(newCartProducts);
-      }),
-      map((res) => {
-        console.log(res.data);
+      map((res: any) => {
         return res.data;
       })
     );
@@ -88,13 +150,6 @@ export class CartService { // Make another APICartService To handle the cart API
   RemoveSpecificCartItem(productId: string) {
     return this.httpClient.delete<any>(
       environment.BASE_URL + '/api/v1/cart/' + productId
-    ).pipe(
-      tap((res: any) => {
-        const newCartProducts = res.data.products.map((cartProd: any) => {
-          return { count: cartProd.count, product: cartProd.product }
-        });
-        this.cartProducts.next(newCartProducts)
-      })
-    );
+    )
   }
 }

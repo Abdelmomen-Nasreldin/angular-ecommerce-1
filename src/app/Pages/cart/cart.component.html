@@ -14,8 +14,8 @@
                     <!-- <p class="text-sm pl-2 leading-none" [routerLink]="['/']">Back</p> -->
                 </div>
                 <!-- <p class="lg:text-4xl text-3xl font-black leading-10 text-gray-800 pt-3">Bag</p> -->
-                <h2 *ngIf="!isLoading && !!!products.length"  class="bg-red-100 border text-red-700 px-4 py-3 rounded relative mt-3"> No Products in the Cart</h2>
-              <ng-container *ngFor="let product of products">
+                <h2 *ngIf="!isLoading && !!!cartProducts.length"  class="bg-red-100 border text-red-700 px-4 py-3 rounded relative mt-3"> No Products in the Cart</h2>
+              <ng-container *ngFor="let product of cartProducts">
                 <!-- <app-product class="flex-[0_1_300px]" [product]="product"></app-product> -->
               <div class="md:flex items-strech py-8 md:py-10 lg:py-8 border-t border-gray-50">
                   <div class="md:w-4/12 2xl:w-1/4 w-full">
@@ -39,7 +39,7 @@
                       <div class="flex items-center justify-between pt-5">
                           <div class="flex itemms-center">
                               <!-- <p class="text-xs leading-3 underline text-gray-800 cursor-pointer">Add to favorites</p> -->
-                              <p class="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer" (click)="onRemove(product.product.id)">Remove</p>
+                              <p class="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer" (click)="onRemove(product._id)">Remove</p>
                           </div>
                           <p class="text-base font-black leading-none text-gray-800">{{product.price | currency}}</p>
                       </div>
@@ -55,7 +55,7 @@
                       <p class="lg:text-4xl text-3xl font-black leading-9 text-gray-800">Summary</p>
                       <div class="flex items-center justify-between pt-16">
                           <p class="text-base leading-none text-gray-800">Subtotal</p>
-                          <p class="text-base leading-none text-gray-800">{{totalPrice | currency}}</p>
+                          <p class="text-base leading-none text-gray-800">{{cart.totalCartPrice | currency}}</p>
                       </div>
                       <div class="flex items-center justify-between pt-5">
                           <p class="text-base leading-none text-gray-800">Shipping</p>
@@ -69,9 +69,9 @@
                   <div>
                       <div class="flex items-center pb-6 justify-between lg:pt-5 pt-20">
                           <p class="text-2xl leading-normal text-gray-800">Total</p>
-                          <p class="text-2xl font-bold leading-normal text-right text-gray-800">{{totalPrice | currency}}</p>
+                          <p class="text-2xl font-bold leading-normal text-right text-gray-800">{{cart.totalCartPrice | currency}}</p>
                       </div>
-                      <button [disabled]="!!!products.length" (click)="checkout()" class="text-base leading-none w-full py-5 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white">Checkout</button>
+                      <button [disabled]="!!!cartProducts.length" (click)="checkout()" class="text-base leading-none w-full py-5 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white">Checkout</button>
                   </div>
               </div>
           </div>

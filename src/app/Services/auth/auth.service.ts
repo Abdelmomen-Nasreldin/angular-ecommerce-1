@@ -13,18 +13,15 @@ const baseURL = "https://ecommerce.routemisr.com";
 export class AuthService {
   isAuthenticated = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
   // token = new BehaviorSubject<string>(JSON.stringify(localStorage.getItem('token')));
-  // token : string | null= localStorage.getItem('token') || null
 
-  // static isAuthenticated: any;
   constructor(private _httpClient: HttpClient, private _router: Router, private _cartService : CartService) { };
 
   login(data: Login) {
     return this._httpClient.post(baseURL + '/api/v1/auth/signin', data).pipe(
       tap((res: any) => {
         localStorage.setItem('token', JSON.stringify(res.token)) // it's a string in all cases
-        // this.token = res.token;
         this.isAuthenticated.next(true);
-        this._cartService.getLoggedUserCart().subscribe()
+        this._cartService.getCartProducts().subscribe()
       })
     );
   }

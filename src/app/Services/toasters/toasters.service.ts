@@ -7,10 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 export class ToastersService {
 
   constructor(private toastr: ToastrService) { }
-  showSuccess() {
-    this.toastr.success('Added to Cart!', 'Success');
+  showSuccess(msg: string) {
+    this.toastr.success(msg, 'Success');
   }
   showFailure() {
-    this.toastr.error('Not Added!', 'Error!' );
+    this.toastr.error('Failed', 'Error!' );
   }
 }

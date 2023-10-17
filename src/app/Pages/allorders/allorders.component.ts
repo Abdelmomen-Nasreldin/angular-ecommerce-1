@@ -48,9 +48,9 @@ export class AllordersComponent implements OnInit {
   }
 
   onRemove(productId: string) {
-    this._cartService.RemoveSpecificCartItem(productId).subscribe((res) => {
-      this.products = res.data.products;
-      this.totalPrice = res.data.totalCartPrice;
+    this._cartService.RemoveCartProduct(productId).subscribe((res) => {
+      this.products = res.products;
+      this.totalPrice = res.totalCartPrice;
       console.log(res, this.products);
     });
   }

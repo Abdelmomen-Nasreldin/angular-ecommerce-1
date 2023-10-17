@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/Services/auth/auth.service';
 import { CartService } from 'src/app/Services/cart/cart.service';
 interface pages {
@@ -10,11 +11,12 @@ interface pages {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated: boolean = false;
   menuHandler: boolean = true;
   mdOptions: boolean = true;
   search: boolean = true;
+  sub! : Subscription
   pages: pages[] = [
     { title: 'home', path: '/' },
     { title: 'cart', path: '/cart' },
@@ -31,6 +33,7 @@ export class HeaderComponent implements OnInit {
       this.isAuthenticated = isAuth;
     });
   }
+ 
   menuHandlerBtn() {
     this.menuHandler = !this.menuHandler;
   }
@@ -42,9 +45,9 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._cartService.getCartProducts().subscribe({
+   this.sub = this._cartService.cartProducts.subscribe({
       next: (res) => {
-        this.cartProductsLength = res.length;
+        this.cartProductsLength = res.products.length;
         console.log(this.cartProductsLength);
       },
       error: (err) => {
@@ -55,4 +58,9 @@ export class HeaderComponent implements OnInit {
   logout() {
     this._authService.logout();
   }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe()
+  }
+
 }

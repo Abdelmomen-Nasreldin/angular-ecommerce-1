@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'cart',
-        canActivate: [authGuard()],
+        // canActivate: [authGuard()],
         loadComponent: () =>
           import('./Pages/cart/cart.component').then((m) => m.CartComponent),
       },
