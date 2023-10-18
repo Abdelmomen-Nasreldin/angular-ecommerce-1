@@ -28,6 +28,7 @@ export class CartService { // Make another APICartService To handle the cart API
     })
     this.cartProducts.next({ ...NotLoginCart, totalCartPrice })
     console.log("before api", this.cartProducts.getValue());
+    localStorage.setItem(CART_STORAGE_NAME, JSON.stringify(this.cartProducts.getValue()));
 
     this.getLoggedUserCart().subscribe({
       next: (res: Cart) => {
@@ -39,6 +40,8 @@ export class CartService { // Make another APICartService To handle the cart API
           cartOwner: res.cartOwner,
           updatedAt: res.updatedAt,
         })
+        localStorage.setItem(CART_STORAGE_NAME, JSON.stringify(this.cartProducts.getValue()));
+
         NotLoginCart.products.forEach(product=>{
           this.addProductToCart(product._id).subscribe()
         })
