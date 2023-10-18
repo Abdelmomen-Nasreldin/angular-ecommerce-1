@@ -88,7 +88,7 @@ export class CartService { // Make another APICartService To handle the cart API
 
   RemoveCartProduct(productId: string) {
     let oldCart = this.cartProducts.getValue();
-    const newProducts = oldCart.products.filter(prod => prod._id != productId)
+    const newProducts = oldCart.products.filter(prod => prod.product._id != productId)
     let totalCartPrice = 0;
     newProducts.forEach(prod => {
       let allProductprice = prod.count * prod.price;
