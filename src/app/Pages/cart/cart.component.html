@@ -17,7 +17,7 @@
                 <h2 *ngIf="!isLoading && !!!cartProducts.length"  class="bg-red-100 border text-red-700 px-4 py-3 rounded relative mt-3"> No Products in the Cart</h2>
               <ng-container *ngFor="let product of cartProducts">
                 <!-- <app-product class="flex-[0_1_300px]" [product]="product"></app-product> -->
-              <div class="md:flex items-strech py-8 md:py-10 lg:py-8 border-t border-gray-50">
+              <div [@removeItem] class="md:flex items-strech py-8 md:py-10 lg:py-8 border-t border-gray-50">
                   <div class="md:w-4/12 2xl:w-1/4 w-full">
                       <!-- <img src="https://i.ibb.co/SX762kX/Rectangle-36-1.png" alt="Black Leather Bag" class="h-full object-center object-cover md:block hidden" /> -->
                       <img [src]="product.product.imageCover" alt="Black Leather Bag" class=" w-full h-full object-center object-cover" />
