@@ -7,6 +7,8 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 import { OrdersService } from 'src/app/Services/orders/orders.service';
 import { CommonModule } from '@angular/common';
 import { Cart, CartProduct } from 'src/app/Models/cart-product';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+
 @Component({
   standalone: true,
   imports: [CommonModule, RouterModule, SharedModule],
