@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 export class ProductsService {
 
   constructor(private httpClient: HttpClient) { }
-  // need behavior subject for products => It will be better not using APIs in components
 
   products = new BehaviorSubject<Product[]>([])
   
@@ -18,9 +17,20 @@ export class ProductsService {
     return this.products.asObservable();
   }
 
-  setProducts(products : Product[]){
-     this.products.next(products)
-     return this.products.asObservable();
+  setProducts(products: Product[] = []) {
+    if (products.length > 0) {
+      this.products.next(products);
+      return this.products.asObservable();
+    }
+    this.getAllProducts().subscribe({
+      next: (res: Product[]) => {
+        this.products.next(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+    return this.products.asObservable();
   }
 
   getAllProducts(): Observable<Product[]> {

@@ -18,9 +18,15 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   products!: Product[]
   ngOnInit() {
     this.isLoading = true
-    this.sub = this._products.getAllProducts().subscribe((data: Product[]) => {
-      this.products = data
-      this.isLoading = false
+    this._products.getProducts().subscribe({
+      next: (data: Product[]) => {
+        if (data.length) {
+          this.products = data
+          this.isLoading = false
+        }
+      }, error: (err) => {
+        console.log(err);
+      }
     });
   }
 
