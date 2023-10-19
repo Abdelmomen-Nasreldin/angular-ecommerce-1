@@ -13,6 +13,15 @@ import { Cart, CartProduct } from 'src/app/Models/cart-product';
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
+    animations: [trigger('removeItem', [
+    state('removing', style({
+      opacity: 1,
+    })),
+    transition('* => void', animate("500ms ease-in-out", keyframes([
+      style({opacity: 1, offset: 0}),
+      style({opacity: 0, offset: 1})
+  ])))
+  ])]
 })
 export class CartComponent implements OnDestroy{
   cart!: Cart
